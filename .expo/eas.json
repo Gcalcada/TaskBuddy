@@ -11,7 +11,7 @@
       "distribution": "internal"
     },
     "production": {
-      "distribution": "store" // Por exemplo, definido para distribuição na loja de aplicativos
+      "distribution": "store"
     }
   },
   "submit": {
