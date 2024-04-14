@@ -1,28 +1,28 @@
 {
+  "cli": {
+    "version": "7.8.1"
+  },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
       "android": {
         "buildType": "apk",
-        "image": "default"
+        "image": "ubuntu-22.04-jdk-17-ndk-r21e"
       }
     },
     "staging": {
       "distribution": "internal",
       "android": {
         "buildType": "apk",
-        "image": "default"
+        "image": "ubuntu-22.04-jdk-17-ndk-r21e"
       }
     },
     "production": {
       "android": {
         "buildType": "apk",
-        "image": "default"
+        "image": "ubuntu-22.04-jdk-17-ndk-r21e"
       }
     }
-  },
-  "cli": {
-    "version": ">= 7.8.1"
   }
 }
