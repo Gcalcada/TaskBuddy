@@ -8,20 +8,24 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk",
-        "image": "ubuntu-22.04-jdk-17-ndk-r21e"
+        "image": "ubuntu-22.04-jdk-17-ndk-r21e",
+        "channel": "development"
       }
     },
     "staging": {
       "distribution": "internal",
       "android": {
         "buildType": "apk",
-        "image": "ubuntu-22.04-jdk-17-ndk-r21e"
+        "image": "ubuntu-22.04-jdk-17-ndk-r21e",
+        "channel": "staging"
       }
     },
     "production": {
+      "distribution": "internal",
       "android": {
         "buildType": "apk",
-        "image": "ubuntu-22.04-jdk-17-ndk-r21e"
+        "image": "ubuntu-22.04-jdk-17-ndk-r21e",
+        "channel": "production"
       }
     }
   }
