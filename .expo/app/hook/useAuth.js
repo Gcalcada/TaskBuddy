@@ -62,7 +62,7 @@ const useAuth = () => {
 
             const user = userCredential.user;
             await sendEmailVerification(auth.currentUser, {
-                url: 'taskbuddy://verification',
+                url: 'https://gcalcada.github.io/TaskBuddy',
                 handleCodeInApp: true,
                 mode: 'verifyEmail',
                 replyTo: email,
