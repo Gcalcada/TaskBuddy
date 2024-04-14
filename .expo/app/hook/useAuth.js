@@ -61,7 +61,12 @@ const useAuth = () => {
 
 
             const user = userCredential.user;
-
+            await sendEmailVerification(auth.currentUser, {
+                url: 'taskbuddy://verification',
+                handleCodeInApp: true,
+                mode: 'verifyEmail',
+                replyTo: email,
+            });
 
             await updateProfile(user, {
                 displayName: displayName
