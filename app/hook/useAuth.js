@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { addDoc, collection, getFirestore } from 'firebase/firestore';
 import { useEffect, useReducer } from 'react';
-import { app } from '../firebaseInitialize'; // Verifique se a importação do app está correta
+import { app } from '../firebaseInitialize';
 import authReducer from '../reducer/authReducer';
 
 const useAuth = () => {
