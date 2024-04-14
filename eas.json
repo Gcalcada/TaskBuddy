@@ -4,17 +4,19 @@
   },
   "build": {
     "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+      "android": {
+        "image": "latest"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "android": {
+        "image": "latest"
+      }
     },
     "production": {
-      "distribution": "store"
+      "android": {
+        "image": "latest"
+      }
     }
-  },
-  "submit": {
-    "production": {}
   }
 }
