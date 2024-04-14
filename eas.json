@@ -1,23 +1,25 @@
 {
   "build": {
-    "androidapk": {
-      "android": {
-        "buildType": "apk"
-      }
-    },
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "image": "default"
+      }
     },
-    "preview": {
-      "distribution": "internal"
+    "staging": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "image": "default"
+      }
     },
-    "production": {}
-  },
-  "cli": {
-    "version": ">= 7.8.1"
-  },
-  "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "buildType": "apk",
+        "image": "default"
+      }
+    }
   }
 }
