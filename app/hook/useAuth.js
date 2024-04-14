@@ -39,7 +39,7 @@ const useAuth = () => {
     };
     const registerWithEmailAndPassword = async (email, password, displayName) => {
         try {
-            // Verificar se já existe um identificador único do dispositivo armazenado localmente
+
 
             const auth = getAuth();
 
