@@ -1,11 +1,13 @@
 {
   "cli": {
-    "version": "7.8.1"
+    "version": "7.8.1",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "autoIncrement": true,
       "android": {
         "buildType": "apk",
         "image": "ubuntu-22.04-jdk-17-ndk-r21e",
@@ -14,6 +16,7 @@
     },
     "staging": {
       "distribution": "internal",
+      "autoIncrement": true,
       "android": {
         "buildType": "apk",
         "image": "ubuntu-22.04-jdk-17-ndk-r21e",
@@ -22,6 +25,7 @@
     },
     "production": {
       "distribution": "internal",
+      "autoIncrement": true,
       "android": {
         "buildType": "apk",
         "image": "ubuntu-22.04-jdk-17-ndk-r21e",
