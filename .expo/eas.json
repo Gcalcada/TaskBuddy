@@ -10,7 +10,9 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "distribution": "store" // Por exemplo, definido para distribuição na loja de aplicativos
+    }
   },
   "submit": {
     "production": {}
