@@ -1,5 +1,5 @@
-import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { addDoc, collection, getFirestore } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from '@firebase/auth';
+import { addDoc, collection, getFirestore } from '@firebase/firestore';
 import { useEffect, useReducer } from 'react';
 import { app } from '../firebaseInitialize';
 import authReducer from '../reducer/authReducer';
