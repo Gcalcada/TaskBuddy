@@ -2,7 +2,16 @@
     "s2WithPadding": {
         "fontSize": 15,
         "fontWeight": "600",
+        "fontFamily": "OpenSans-Regular",
+        "paddingBottom": 15,
+        "width": "100%"
+    },
+    "s2WithoutPadding": {
+        "width": "50%",
+        "fontSize": 15,
+        "paddingTop": 5,
+        "fontWeight": "600",
         "fontFamily": "OpenSans-SemiBold",
-        "paddingTop": 10
+        "textAlign": "center"
     }
 }

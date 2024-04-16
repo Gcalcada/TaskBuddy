@@ -20,6 +20,7 @@
     "@types/react": "~18.2.45",
     "@ui-kitten/components": "^5.3.1",
     "@ui-kitten/eva-icons": "^5.3.1",
+    "animejs": "^3.2.2",
     "expo": "~50.0.15",
     "expo-constants": "~15.4.5",
     "expo-dev-client": "~3.3.11",
@@ -33,6 +34,7 @@
     "firebase": "^10.11.0",
     "lottie-react-native": "6.5.1",
     "react": "18.2.0",
+    "react-motion-animate": "^1.0.6",
     "react-native": "0.73.6",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-image-picker": "^7.1.2",
@@ -42,6 +44,7 @@
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
+    "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": "^10.0.3",
     "react-redux": "^9.1.0",
     "redux": "^5.0.1",
@@ -52,7 +55,7 @@
     "eas-cli": "^7.8.0"
   },
   "private": true,
-  "description": "> Why d I have«a folder named \".expo\" in my project? The \".expo\" folder is created when an Expo project is started using \"expo start\" command. > What do the files contain? - \"devices.json\": contains information about devices that have recently opened this project. This is used to populate the \"Development sessions\" list in your development builds. - \"settings.json\": contains the server configuration that is used to serve the application manifest. > Should I commit the \".expo\" folder? No, you should not share the \".expo\" folder. It does not contain any information that is relevant for other developers working on the project, it is specific to your machine. Upon project creation, the \".expo\" folder is already added to your \".gitignore\" file.",
+  "description": "> Why d I have folder named \".expo\" in my project? The \".expo\" folder is created when an Expo project is started using \"expo start\" command. > What do the files contain? - \"devices.json\": contains information about devices that have recently opened this project. This is used to populate the \"Development sessions\" list in your development builds. - \"settings.json\": contains the server configuration that is used to serve the application manifest. > Should I commit the \".expo\" folder? No, you should not share the \".expo\" folder. It does not contain any information that is relevant for other developers working on the project, it is specific to your machine. Upon project creation, the \".expo\" folder is already added to your \".gitignore\" file.",
   "keywords": [
     "TASK",
     "MANAGMENT",

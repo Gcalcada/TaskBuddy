@@ -17,7 +17,7 @@ const _layout = () => {
         <Provider store={store}>
             <ApplicationProvider
                 {...eva}
-                theme={{ ...eva.light, ...theme }}
+                theme={{ ...eva.dark, ...theme }}
                 customMapping={{ ...eva.mapping, ...mapping }}
             >
 
