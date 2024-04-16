@@ -110,13 +110,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     errorContainer: {
-        borderTopLeftRadius: 40, // Apenas o canto superior esquerdo é arredondado
-        borderTopRightRadius: 40, // Apenas o canto superior direito é arredondado
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
         flexDirection: 'row',
-        justifyContent: 'space-between', // Alinha os elementos ao longo do eixo principal
-        alignItems: 'center', // Centraliza verticalmente os elementos
+        justifyContent: 'space-between',
+        alignItems: 'center',
         paddingVertical: 8,
-        paddingHorizontal: 20, // Adiciona padding horizontal
+        paddingHorizontal: 20,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
