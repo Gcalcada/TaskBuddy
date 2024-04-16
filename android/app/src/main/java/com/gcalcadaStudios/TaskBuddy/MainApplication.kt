@@ -1,4 +1,4 @@
-package com.gcalcada.taskbuddy
+package com.gcalcadaStudios.TaskBuddy
 
 import android.app.Application
 import android.content.res.Configuration
