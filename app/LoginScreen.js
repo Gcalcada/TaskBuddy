@@ -6,23 +6,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import Animation4 from '../assets/images/Animation4.json';
 import CustomText from './CustomText';
 import ErrorMessageFront from './ErrorMessageHandling';
-import useAuth from './hook/useAuth'; // Import the useAuth hook
-import { setCurrentUser } from './reducer/authReducer';
+import useAuth from './hook/useAuth';
 import { setMessage } from './reducer/messageReducer';
+
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessageLog, setErrorMessageLogging] = useState('');
     const errorMessage = useSelector(state => state.message.errorMessage);
+
     const dispatch = useDispatch();
-    const { loginWithEmailAndPassword } = useAuth();
+    const { loginWithEmailAndPassword, setCurrentUser } = useAuth();
     const theme = useTheme();
 
 
     const handleEmailLogin = async () => {
         try {
             const user = await loginWithEmailAndPassword(email, password);
-            dispatch(setCurrentUser(user));
+            // Dispache uma ação para atualizar o estado do usuário atual
+            setCurrentUser(user);
+            navigation.navigate('HomeScreen');
+
         } catch (error) {
             dispatch(setMessage({ category: 'errorMessage', message: 'Tentativa de login falhou. Por favor, verifique suas credenciais e tente novamente.' }));
             console.log(error);

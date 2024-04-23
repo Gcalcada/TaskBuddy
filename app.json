@@ -17,6 +17,7 @@
     ],
     "android": {
       "package": "com.gcalcadaStudios.TaskBuddy",
+      "googleServicesFile": "./android/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

@@ -1,24 +1,49 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, Layout, Text, useTheme } from '@ui-kitten/components';
 import * as SplashScreen from 'expo-splash-screen';
 import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useSelector } from 'react-redux';
 import useCustomFonts from './useCustomFonts';
 const { width } = Dimensions.get('window');
+
 const OnboardingScreen = ({ navigation }) => {
     const scrollViewRef = useRef(null);
     const [currentPage, setCurrentPage] = useState(0);
+    const [onboardingCompleted, setOnboardingCompleted] = useState(false);
     const fontsLoaded = useCustomFonts();
     const theme = useTheme();
+    const currentUser = useSelector(state => state.auth.currentUser);
 
     useEffect(() => {
         async function hideSplash() {
             await SplashScreen.hideAsync();
         }
         hideSplash();
-    }, []);
 
+        // Verificar o status do onboarding
+        const checkOnboardingStatus = async () => {
+            try {
+                const value = await AsyncStorage.getItem('onboardingCompleted');
+                if (value !== null && value === 'true') {
+                    setOnboardingCompleted(true);
+                }
+            } catch (error) {
+                console.error('Erro ao obter informação de onboarding:', error);
+            }
+        };
+
+        checkOnboardingStatus();
+
+        // Verificar se o onboarding foi concluído ou se o usuário está logado
+        if (onboardingCompleted) {
+            navigation.navigate('LoginScreen');
+        } else if (currentUser) {
+            navigation.navigate('HomeScreen');
+        }
+    }, [navigation, currentUser]);
     const descriptions = [
         {
             title: "Let's Get Started!",

@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
 import useAuth from './hook/useAuth'; // Importe o hook useAuth
 
-const RegisterScreen = () => {
-    const { registerWithEmailAndPassword } = useAuth(); // Use o hook useAuth para acessar a função registerWithEmailAndPassword
+const RegisterScreen = ({ navigation }) => {
+    const { RegWithEmailAndPassword } = useAuth(); // Use o hook useAuth para acessar a função registerWithEmailAndPassword
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [userId, setFullName] = useState('');
@@ -13,17 +13,14 @@ const RegisterScreen = () => {
 
     const handleSignUp = async () => {
         try {
-            // Chame a função registerWithEmailAndPassword com os dados do usuário
-            const user = await registerWithEmailAndPassword(email, password, userId);
+
+            const user = await RegWithEmailAndPassword(email, password, userId);
             console.log('Usuário registrado com sucesso:', user);
+            navigation.navigate('LoginScreen');
         } catch (error) {
             console.error('Erro ao registrar usuário:', error);
             setErrorMessage('Ocorreu um erro ao fazer o registro. Por favor, tente novamente.');
         }
-    };
-
-    const handleChoosePhoto = (url) => {
-        setPhotoURL(url);
     };
 
     return (

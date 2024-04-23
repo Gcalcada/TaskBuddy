@@ -3,7 +3,6 @@ import { addDoc, collection, getFirestore } from '@firebase/firestore';
 import { useEffect, useReducer } from 'react';
 import { app } from '../firebaseInitialize';
 import authReducer from '../reducer/authReducer';
-
 const useAuth = () => {
     const initialState = {
         currentUser: null,
@@ -26,41 +25,54 @@ const useAuth = () => {
 
         return () => unsubscribe();
     }, [auth]);
+
+    const reloadUser = async () => {
+        try {
+            await auth.currentUser.reload(); // Recarrega os detalhes do usuário atual
+        } catch (error) {
+            console.error('Erro ao recarregar usuário:', error);
+            throw error;
+        }
+    };
+
     const loginWithEmailAndPassword = async (email, password) => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            dispatch({ type: 'SET_CURRENT_USER', payload: user });
+            console.log('Usuário logado:', user); // Adicione este console log
+            const emailVerified = user.emailVerified;
+
+            if (!emailVerified) {
+                console.log('Seu e-mail ainda não foi verificado. Por favor, verifique seu e-mail para acessar todas as funcionalidades.');
+            }
+            dispatch(setCurrentUser(user));
             return user;
+
         } catch (error) {
             dispatch({ type: 'AUTH_ERROR', payload: error.message });
             throw error;
         }
     };
-    const registerWithEmailAndPassword = async (email, password, displayName) => {
+    const RegWithEmailAndPassword = async (email, password, displayName) => {
+
         try {
-
-
-            const auth = getAuth();
-
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-            // Obtenha uma referência à coleção de usuários
             const usersCollection = collection(db, 'users');
+            const userId = userCredential.user.uid;
 
-            // Gere um ID único para o usuário usando um timestamp combinado com um número aleatório
-            const userId = Date.now().toString() + Math.floor(Math.random() * 1000).toString();
-
-            // Adicione os dados diretamente à coleção usando o ID gerado
             await addDoc(usersCollection, {
                 userId: userId,
                 displayName: displayName,
                 email: email,
             });
 
+            // Atualiza o perfil do usuário com o displayName
+            await updateProfile(userCredential.user, {
+                displayName: displayName
+            });
 
-
-            const user = userCredential.user;
+            // Envia o e-mail de verificação
             await sendEmailVerification(auth.currentUser, {
                 url: 'https://gcalcada.github.io/TaskBuddy',
                 handleCodeInApp: true,
@@ -68,16 +80,20 @@ const useAuth = () => {
                 replyTo: email,
             });
 
-            await updateProfile(user, {
-                displayName: displayName
-            });
-            dispatch({ type: 'SET_CURRENT_USER', payload: user });
-            return user;
+            // Verifica se o e-mail foi verificado
+            const emailVerified = userCredential.user.emailVerified;
+            if (!emailVerified) {
+                console.log('Seu e-mail ainda não foi verificado. Por favor, verifique seu e-mail para acessar todas as funcionalidades.');
+                return null;
+            }
+
+            return userCredential.user;
         } catch (error) {
             dispatch({ type: 'AUTH_ERROR', payload: error.message });
             throw error;
         }
     };
+
 
     const logout = async () => {
         try {
@@ -86,11 +102,18 @@ const useAuth = () => {
             dispatch({ type: 'AUTH_ERROR', payload: error.message });
         }
     };
+    const setCurrentUser = (user) => {
+        dispatch({
+            type: 'SET_CURRENT_USER',
+            payload: user
+        });
+    };
 
     return {
         ...state,
         loginWithEmailAndPassword,
-        registerWithEmailAndPassword,
+        setCurrentUser,
+        RegWithEmailAndPassword,
         logout,
     };
 };
