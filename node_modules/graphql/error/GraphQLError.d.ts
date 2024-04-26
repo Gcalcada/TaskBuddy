@@ -14,7 +14,7 @@ import type { Source } from '../language/source';
 export interface GraphQLErrorExtensions {
   [attributeName: string]: unknown;
 }
-export interface GraphQLErrorArgs {
+export interface GraphQLErrorOptions {
   nodes?: ReadonlyArray<ASTNode> | ASTNode | null;
   source?: Maybe<Source>;
   positions?: Maybe<ReadonlyArray<number>>;
@@ -75,8 +75,9 @@ export declare class GraphQLError extends Error {
    * Extension fields to add to the formatted error.
    */
   readonly extensions: GraphQLErrorExtensions;
+  constructor(message: string, options?: GraphQLErrorOptions);
   /**
-   * @deprecated Please use the `GraphQLErrorArgs` constructor overload instead.
+   * @deprecated Please use the `GraphQLErrorOptions` constructor overload instead.
    */
   constructor(
     message: string,
@@ -91,7 +92,6 @@ export declare class GraphQLError extends Error {
     >,
     extensions?: Maybe<GraphQLErrorExtensions>,
   );
-  constructor(message: string, args?: GraphQLErrorArgs);
   get [Symbol.toStringTag](): string;
   toString(): string;
   toJSON(): GraphQLFormattedError;
@@ -137,6 +137,6 @@ export declare function printError(error: GraphQLError): string;
  * Given a GraphQLError, format it according to the rules described by the
  * Response Format, Errors section of the GraphQL Specification.
  *
- * @deprecated Please use `error.toString` instead. Will be removed in v17
+ * @deprecated Please use `error.toJSON` instead. Will be removed in v17
  */
 export declare function formatError(error: GraphQLError): GraphQLFormattedError;

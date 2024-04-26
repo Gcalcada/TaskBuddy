@@ -23,7 +23,6 @@ const OnboardingScreen = ({ navigation }) => {
         }
         hideSplash();
 
-        // Verificar o status do onboarding
         const checkOnboardingStatus = async () => {
             try {
                 const value = await AsyncStorage.getItem('onboardingCompleted');

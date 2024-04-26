@@ -16,23 +16,20 @@ const LoginScreen = ({ navigation }) => {
     const errorMessage = useSelector(state => state.message.errorMessage);
 
     const dispatch = useDispatch();
-    const { loginWithEmailAndPassword, setCurrentUser } = useAuth();
+    const { loginWithEmailAndPassword, user } = useAuth();
     const theme = useTheme();
 
 
     const handleEmailLogin = async () => {
         try {
-            const user = await loginWithEmailAndPassword(email, password);
-            // Dispache uma ação para atualizar o estado do usuário atual
-            setCurrentUser(user);
+            await loginWithEmailAndPassword(email, password);
             navigation.navigate('HomeScreen');
-
         } catch (error) {
+            console.error('Login error:', error);
+            // Dispatch an error message to Redux store or display it to the user
             dispatch(setMessage({ category: 'errorMessage', message: 'Tentativa de login falhou. Por favor, verifique suas credenciais e tente novamente.' }));
-            console.log(error);
         }
     };
-
 
     const handleRegisterNavigation = () => {
         navigation.navigate('RegisterScreen');
@@ -40,13 +37,11 @@ const LoginScreen = ({ navigation }) => {
     useEffect(() => {
         if (errorMessageLog) {
             dispatch(setMessage({ category: 'errorMessage', message: errorMessageLog }));
-            setErrorMessageLogging(''); // Limpa a mensagem de erro logada
+            setErrorMessageLogging('');
         }
     }, [errorMessageLog]);
 
     return (
-
-
         <Layout style={{ flex: 1 }}>
             <ErrorMessageFront message={errorMessage} duration={30000} />
             <View style={{ alignItems: 'center', marginTop: 0, marginBottom: 0, width: '100%' }}>
@@ -61,7 +56,7 @@ const LoginScreen = ({ navigation }) => {
                     placeholder='Type your email... '
                     value={email}
                     onChangeText={setEmail}
-                    textStyle={{ color: 'white', fontSize: 14 }} // Estilo para o texto do placeholder
+                    textStyle={{ color: 'white', fontSize: 14 }}
                     style={{ marginVertical: 5, width: '100%', paddingTop: 5 }}
                     require
                 />
@@ -73,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
                     value={password}
                     secureTextEntry
                     onChangeText={setPassword}
-                    textStyle={{ color: 'white', fontSize: 14 }} // Estilo para o texto do placeholder
+                    textStyle={{ color: 'white', fontSize: 14 }}
                     style={{ marginVertical: 5, width: '100%', paddingTop: 5, paddingBottom: 10 }}
                     require
                 />
@@ -94,5 +89,4 @@ const LoginScreen = ({ navigation }) => {
         </Layout >
     );
 };
-
 export default LoginScreen;

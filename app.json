@@ -74,7 +74,8 @@
         {
           "photosPermission": "O aplicativo acessa suas fotos para permitir que você as compartilhe com seus amigos."
         }
-      ]
+      ],
+      "expo-router"
     ],
     "extra": {
       "eas": {

@@ -1,34 +1,41 @@
 import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from '@firebase/auth';
 import { addDoc, collection, getFirestore } from '@firebase/firestore';
-import { useEffect, useReducer } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useReducer } from 'react';
+import { clearCurrentUser, setCurrentUser } from '../actions/authActions';
 import { app } from '../firebaseInitialize';
 import authReducer from '../reducer/authReducer';
+import { encryptData } from '../utils/encryptionUtils';
+import { generateEncryptionKey } from '../utils/supersecret';
 const useAuth = () => {
-    const initialState = {
-        currentUser: null,
-        loading: true,
-        error: null,
-    };
 
-    const [state, dispatch] = useReducer(authReducer, initialState);
+
+    const [state, dispatch] = useReducer(authReducer);
     const auth = getAuth(app);
     const db = getFirestore();
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            if (user) {
-                dispatch({ type: 'SET_CURRENT_USER', payload: user });
+    const checkAuthStatus = async () => {
+        try {
+            const currentUser = auth.currentUser;
+            if (currentUser) {
+                // User is authenticated, return true
+                return true;
             } else {
-                dispatch({ type: 'CLEAR_CURRENT_USER' });
+                // User is not authenticated, return false
+                return false;
             }
-        });
+        } catch (error) {
+            console.error('Error checking authentication status:', error);
+            // Handle error here, such as returning false or displaying an error message
+            return false;
+        }
+    };
 
-        return () => unsubscribe();
-    }, [auth]);
+
 
     const reloadUser = async () => {
         try {
-            await auth.currentUser.reload(); // Recarrega os detalhes do usuário atual
+            await auth.currentUser.reload();
         } catch (error) {
             console.error('Erro ao recarregar usuário:', error);
             throw error;
@@ -39,13 +46,15 @@ const useAuth = () => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            console.log('Usuário logado:', user); // Adicione este console log
-            const emailVerified = user.emailVerified;
 
-            if (!emailVerified) {
+
+
+            if (!user.emailVerified) {
                 console.log('Seu e-mail ainda não foi verificado. Por favor, verifique seu e-mail para acessar todas as funcionalidades.');
             }
-            dispatch(setCurrentUser(user));
+            dispatch(setCurrentUser(user))
+            await AsyncStorage.setItem('user', JSON.stringify(user));
+
             return user;
 
         } catch (error) {
@@ -56,15 +65,23 @@ const useAuth = () => {
     const RegWithEmailAndPassword = async (email, password, displayName) => {
 
         try {
+
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
             const usersCollection = collection(db, 'users');
             const userId = userCredential.user.uid;
+            const timestamp = new Date();
+            const encryptionKey = await generateEncryptionKey();
+            console.log('Encryption Key:', encryptionKey);
+            const encryptedEmail = await encryptData(email, encryptionKey);
+            const encryptedDisplayName = await encryptData(displayName, encryptionKey);
+
 
             await addDoc(usersCollection, {
                 userId: userId,
-                displayName: displayName,
-                email: email,
+                displayName: encryptedDisplayName,
+                email: encryptedEmail,
+                createdAt: timestamp,
             });
 
             // Atualiza o perfil do usuário com o displayName
@@ -98,21 +115,17 @@ const useAuth = () => {
     const logout = async () => {
         try {
             await auth.signOut();
+            dispatch(clearCurrentUser);
         } catch (error) {
             dispatch({ type: 'AUTH_ERROR', payload: error.message });
         }
     };
-    const setCurrentUser = (user) => {
-        dispatch({
-            type: 'SET_CURRENT_USER',
-            payload: user
-        });
-    };
+
 
     return {
         ...state,
+        checkAuthStatus,
         loginWithEmailAndPassword,
-        setCurrentUser,
         RegWithEmailAndPassword,
         logout,
     };

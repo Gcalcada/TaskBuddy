@@ -1,28 +1,28 @@
+import { CLEAR_CURRENT_USER, SET_CURRENT_USER } from '../types/types';
+import { getStorageItem } from '../utils/localStorageUtil';
+
+// Load stored user from localStorage
+const storedUser = getStorageItem('currentUser') || null;
+
 const initialState = {
-    currentUser: null,
-    loading: true,
+    currentUser: storedUser,
+    loading: false,
     error: null,
 };
 
 const authReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'SET_CURRENT_USER':
+        case SET_CURRENT_USER:
+            // Immutably update currentUser state
             return {
                 ...state,
                 currentUser: action.payload,
-                loading: false,
             };
-        case 'CLEAR_CURRENT_USER':
+        case CLEAR_CURRENT_USER:
+            // Immutably update currentUser state
             return {
                 ...state,
                 currentUser: null,
-                loading: false,
-            };
-        case 'AUTH_ERROR':
-            return {
-                ...state,
-                error: action.payload,
-                loading: false,
             };
         default:
             return state;

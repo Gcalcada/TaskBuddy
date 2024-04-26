@@ -29,18 +29,22 @@
     "@ui-kitten/components": "^5.3.1",
     "@ui-kitten/eva-icons": "^5.3.1",
     "animejs": "^3.2.2",
+    "crypto-js": "^4.2.0",
     "expo": "^50.0.17",
     "expo-constants": "~15.4.6",
+    "expo-crypto": "~12.8.1",
     "expo-dev-client": "~3.3.11",
-    "expo-font": "~11.10.3",
+    "expo-font": "11.10.3",
     "expo-image-picker": "~14.7.1",
     "expo-linking": "~6.2.2",
     "expo-media-library": "~15.9.2",
-    "expo-router": "~3.4.8",
+    "expo-router": "~3.4.9",
     "expo-status-bar": "~1.11.1",
     "expo-updates": "~0.24.12",
     "firebase": "^10.11.0",
+    "graphql": "^16.8.1",
     "lottie-react-native": "6.5.1",
+    "punycode": "^2.3.1",
     "react": "18.2.0",
     "react-motion-animate": "^1.0.6",
     "react-native": "0.73.6",
@@ -56,12 +60,15 @@
     "react-native-vector-icons": "^10.0.3",
     "react-redux": "^9.1.0",
     "redux": "^5.0.1",
-    "typescript": "^5.3.0"
+    "semver": "^7.6.0",
+    "tar": "^7.0.1",
+    "typescript": "^5.3.0",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "eas-cli": "^0.49.0"
+    "@babel/core": "^7.20.0"
   },
+  "type": "commonjs",
   "private": true,
   "description": "> Why d I have folder named \".expo\" in my project? The \".expo\" folder is created when an Expo project is started using \"expo start\" command. > What do the files contain? - \"devices.json\": contains information about devices that have recently opened this project. This is used to populate the \"Development sessions\" list in your development builds. - \"settings.json\": contains the server configuration that is used to serve the application manifest. > Should I commit the \".expo\" folder? No, you should not share the \".expo\" folder. It does not contain any information that is relevant for other developers working on the project, it is specific to your machine. Upon project creation, the \".expo\" folder is already added to your \".gitignore\" file.",
   "keywords": [
