@@ -21,7 +21,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "versionCode": 3,
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -75,13 +82,30 @@
           "photosPermission": "O aplicativo acessa suas fotos para permitir que você as compartilhe com seus amigos."
         }
       ],
-      "expo-router"
+      "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.0"
+          }
+        }
+      ]
     ],
     "extra": {
       "eas": {
         "projectId": "5bc56f5a-2074-4d40-a6ad-bff9866b160c"
       }
     },
-    "owner": "gcalcadastudios"
+    "owner": "gcalcadastudios",
+    "updates": {
+      "url": "https://u.expo.dev/5bc56f5a-2074-4d40-a6ad-bff9866b160c"
+    },
+    "ios": {
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Permitir $(PRODUCT_NAME) acessar suas fotos.",
+        "NSPhotoLibraryAddUsageDescription": "Permitir $(PRODUCT_NAME) salvar fotos."
+      }
+    }
   }
 }

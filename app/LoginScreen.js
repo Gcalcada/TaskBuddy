@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }) => {
     const errorMessage = useSelector(state => state.message.errorMessage);
 
     const dispatch = useDispatch();
-    const { loginWithEmailAndPassword, user } = useAuth();
+    const { loginWithEmailAndPassword, loginWithGoogle, user } = useAuth();
     const theme = useTheme();
 
 
@@ -28,6 +28,15 @@ const LoginScreen = ({ navigation }) => {
             console.error('Login error:', error);
             // Dispatch an error message to Redux store or display it to the user
             dispatch(setMessage({ category: 'errorMessage', message: 'Tentativa de login falhou. Por favor, verifique suas credenciais e tente novamente.' }));
+        }
+    };
+    const handleGoogleLogin = async () => {
+        try {
+            await loginWithGoogle(); // Call loginWithGoogle function from useAuth
+
+        } catch (error) {
+            console.error('Google login error:', error);
+            // Handle Google login error here
         }
     };
 
@@ -82,7 +91,7 @@ const LoginScreen = ({ navigation }) => {
 
 
                 <CustomText category="s2WithoutPadding">Or continue with</CustomText>
-                <Button size='medium' appearance='outline' status='basic' style={{ width: '100%', marginTop: 20 }}>Login com Google</Button>
+                <Button size='medium' onPress={handleGoogleLogin} appearance='outline' status='basic' style={{ width: '100%', marginTop: 20 }}>Login com Google</Button>
 
             </View>
 

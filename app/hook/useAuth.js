@@ -13,7 +13,7 @@ const useAuth = () => {
     const [state, dispatch] = useReducer(authReducer);
     const auth = getAuth(app);
     const db = getFirestore();
-
+    const user = auth.user;
     const checkAuthStatus = async () => {
         try {
             const currentUser = auth.currentUser;
@@ -39,6 +39,45 @@ const useAuth = () => {
         } catch (error) {
             console.error('Erro ao recarregar usuário:', error);
             throw error;
+        }
+    };
+    const loginWithGoogle = async () => {
+        try {
+            // ... (Google OAuth configuration - same as before)
+
+            const result = await auth.startAsync(config);
+
+            if (result.type === 'success') {
+
+                const { idToken, user } = result.params;
+                const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+                const userCredential = await auth.signInWithCredential(googleCredential);
+
+                // Check if user exists in Firestore
+                const usersCollection = collection(db, 'users');
+                const userDoc = await userRef.get();
+
+                if (!userDoc.exists) {
+                    // New user - register them
+                    await addDoc(usersCollection, {
+                        userId: userId,
+                        displayName: encryptedDisplayName,
+                        email: encryptedEmail,
+                        createdAt: timestamp,
+                    });
+                    console.log('New user registered:', userCredential.user);
+                } else {
+                    // Existing user - log them in
+                    console.log('User logged in:', userCredential.user);
+                }
+
+                // ... (dispatch actions to update user state)
+
+            } else {
+                // ... (handle auth failure)
+            }
+        } catch (error) {
+            // ... (handle errors)
         }
     };
 
@@ -124,6 +163,7 @@ const useAuth = () => {
 
     return {
         ...state,
+        loginWithGoogle,
         checkAuthStatus,
         loginWithEmailAndPassword,
         RegWithEmailAndPassword,
