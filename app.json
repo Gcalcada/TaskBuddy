@@ -17,12 +17,12 @@
     ],
     "android": {
       "package": "com.gcalcadaStudios.TaskBuddy",
-      "googleServicesFile": "/google-services.json",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "versionCode": 3,
+      "versionCode": 7,
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
@@ -68,20 +68,6 @@
         }
       ],
       "@react-native-firebase/auth",
-      [
-        "expo-media-library",
-        {
-          "photosPermission": "Permitir $(PRODUCT_NAME) acessar suas fotos.",
-          "savePhotosPermission": "Permitir $(PRODUCT_NAME) salvar fotos.",
-          "isAccessMediaLocationEnabled": true
-        }
-      ],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "O aplicativo acessa suas fotos para permitir que você as compartilhe com seus amigos."
-        }
-      ],
       "expo-router",
       [
         "expo-build-properties"
@@ -95,12 +81,6 @@
     "owner": "gcalcadastudios",
     "updates": {
       "url": "https://u.expo.dev/5bc56f5a-2074-4d40-a6ad-bff9866b160c"
-    },
-    "ios": {
-      "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Permitir $(PRODUCT_NAME) acessar suas fotos.",
-        "NSPhotoLibraryAddUsageDescription": "Permitir $(PRODUCT_NAME) salvar fotos."
-      }
     }
   }
 }
