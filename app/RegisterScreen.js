@@ -15,7 +15,6 @@ const RegisterScreen = ({ navigation }) => {
         try {
 
             const user = await RegWithEmailAndPassword(email, password, userId);
-            console.log('Usuário registrado com sucesso:', user);
             navigation.navigate('LoginScreen');
         } catch (error) {
             console.error('Erro ao registrar usuário:', error);

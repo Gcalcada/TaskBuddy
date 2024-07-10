@@ -5,7 +5,6 @@ import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useSelector } from 'react-redux';
 import useCustomFonts from './useCustomFonts';
 const { width } = Dimensions.get('window');
 
@@ -15,7 +14,6 @@ const OnboardingScreen = ({ navigation }) => {
     const [onboardingCompleted, setOnboardingCompleted] = useState(false);
     const fontsLoaded = useCustomFonts();
     const theme = useTheme();
-    const currentUser = useSelector(state => state.auth.currentUser);
 
     useEffect(() => {
         async function hideSplash() {
@@ -36,13 +34,9 @@ const OnboardingScreen = ({ navigation }) => {
 
         checkOnboardingStatus();
 
-        // Verificar se o onboarding foi concluído ou se o usuário está logado
-        if (onboardingCompleted) {
-            navigation.navigate('LoginScreen');
-        } else if (currentUser) {
-            navigation.navigate('HomeScreen');
-        }
-    }, [navigation, currentUser]);
+
+    }, []);
+
     const descriptions = [
         {
             title: "Let's Get Started!",
@@ -63,7 +57,6 @@ const OnboardingScreen = ({ navigation }) => {
 
     const handleSkip = () => {
         navigation.navigate("LoginScreen");
-
     };
 
     const handleNext = () => {
@@ -72,7 +65,6 @@ const OnboardingScreen = ({ navigation }) => {
             setCurrentPage(currentPage + 1);
         } else {
             navigation.navigate("LoginScreen");
-
         }
     };
 
@@ -106,11 +98,8 @@ const OnboardingScreen = ({ navigation }) => {
                             {step.animation && <LottieView source={step.animation} autoPlay loop style={{ width: 300, height: 300 }} />}
                         </View>
                     </Layout>
-
-                ))
-                }
-
-            </ScrollView >
+                ))}
+            </ScrollView>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                 {[1, 2, 3].map((pageNumber) => (
                     <Icon key={pageNumber} name={currentPage === pageNumber - 1 ? 'radio-button-checked' : 'radio-button-unchecked'} size={25} color={currentPage === pageNumber - 1 ? theme['color-primary-default'] : 'gray'} style={{ marginHorizontal: 5 }} />
@@ -120,7 +109,7 @@ const OnboardingScreen = ({ navigation }) => {
                 <Button onPress={handleSkip} appearance='ghost' category='h1'>Skip</Button>
                 <Button onPress={handleNext} category='h1' style={{ width: 100, paddingHorizontal: 20, paddingVertical: 10 }}> {currentPage < 2 ? 'Next' : 'Start'} </Button>
             </Layout>
-        </Layout >
+        </Layout>
     );
 };
 

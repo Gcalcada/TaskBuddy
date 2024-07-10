@@ -4,4 +4,6 @@
 /ios/
 # Ignore Gradle build output directory
 build
-n
+*.apk
+*.aab
+*.ipa

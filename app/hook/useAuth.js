@@ -17,21 +17,13 @@ const useAuth = () => {
     const checkAuthStatus = async () => {
         try {
             const currentUser = auth.currentUser;
-            if (currentUser) {
-                // User is authenticated, return true
-                return true;
-            } else {
-                // User is not authenticated, return false
-                return false;
-            }
+            return !!currentUser; // Convert currentUser to a boolean value
         } catch (error) {
             console.error('Error checking authentication status:', error);
             // Handle error here, such as returning false or displaying an error message
             return false;
         }
     };
-
-
 
     const reloadUser = async () => {
         try {
@@ -83,44 +75,47 @@ const useAuth = () => {
 
     const loginWithEmailAndPassword = async (email, password) => {
         try {
+            // Sign in the user with email and password
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-
-
-
+            console.log(user);
+            // Check if the user's email is verified
             if (!user.emailVerified) {
+                // If email is not verified, prompt the user to verify their email
                 console.log('Seu e-mail ainda não foi verificado. Por favor, verifique seu e-mail para acessar todas as funcionalidades.');
+                return null;
+            } else {
+                // If email is verified, dispatch user data and proceed with login
+                dispatch(setCurrentUser(user));
+                await AsyncStorage.setItem('user', JSON.stringify(user));
+                return user;
             }
-            dispatch(setCurrentUser(user))
-            await AsyncStorage.setItem('user', JSON.stringify(user));
-
-            return user;
-
         } catch (error) {
+            // Handle authentication error
             dispatch({ type: 'AUTH_ERROR', payload: error.message });
             throw error;
         }
     };
     const RegWithEmailAndPassword = async (email, password, displayName) => {
-
         try {
+
 
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
             const usersCollection = collection(db, 'users');
+            const verifiedEmailsCollection = collection(db, 'verified_emails'); // Collection for verified emails
             const userId = userCredential.user.uid;
             const timestamp = new Date();
             const encryptionKey = await generateEncryptionKey();
-            console.log('Encryption Key:', encryptionKey);
             const encryptedEmail = await encryptData(email, encryptionKey);
             const encryptedDisplayName = await encryptData(displayName, encryptionKey);
-
 
             await addDoc(usersCollection, {
                 userId: userId,
                 displayName: encryptedDisplayName,
                 email: encryptedEmail,
                 createdAt: timestamp,
+                emailVerified: false // Set initial value as false
             });
 
             // Atualiza o perfil do usuário com o displayName
@@ -136,25 +131,38 @@ const useAuth = () => {
                 replyTo: email,
             });
 
-            // Verifica se o e-mail foi verificado
+            // Return userCredential.user if email verification is not required immediately
+            // Check if email is verified (assuming you want to prevent login until email is verified)
             const emailVerified = userCredential.user.emailVerified;
             if (!emailVerified) {
                 console.log('Seu e-mail ainda não foi verificado. Por favor, verifique seu e-mail para acessar todas as funcionalidades.');
                 return null;
             }
+            await addDoc(verifiedEmailsCollection, {
+                email: encryptedEmail,
+                userId: userId
+            });
+
+            // If email is verified, update the emailVerified field in Firestore
+            await updateDoc(doc(db, 'users', userId), {
+                emailVerified: true
+            });
+
+
 
             return userCredential.user;
         } catch (error) {
-            dispatch({ type: 'AUTH_ERROR', payload: error.message });
-            throw error;
+            // Handle error
         }
     };
+
+
 
 
     const logout = async () => {
         try {
             await auth.signOut();
-            dispatch(clearCurrentUser);
+            dispatch(clearCurrentUser());
         } catch (error) {
             dispatch({ type: 'AUTH_ERROR', payload: error.message });
         }

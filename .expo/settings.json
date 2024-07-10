@@ -1,0 +1,10 @@
+{
+  "hostType": "lan",
+  "lanType": "ip",
+  "dev": true,
+  "minify": false,
+  "urlRandomness": "cjJzYPE",
+  "https": false,
+  "scheme": "com.gcalcadaStudios.TaskBuddy",
+  "devClient": false
+}
