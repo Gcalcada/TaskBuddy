@@ -16,7 +16,7 @@ export const encryptData = async (data) => {
     }
 };
 
-// Function to decrypt data
+// Function to decrypt data 
 export const decryptData = async (encryptedData) => {
     try {
         const key = await generateEncryptionKey();

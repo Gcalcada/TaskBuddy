@@ -78,12 +78,12 @@ const useAuth = () => {
             // Sign in the user with email and password
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            console.log(user);
+
             // Check if the user's email is verified
             if (!user.emailVerified) {
                 // If email is not verified, prompt the user to verify their email
                 console.log('Seu e-mail ainda não foi verificado. Por favor, verifique seu e-mail para acessar todas as funcionalidades.');
-                return null;
+                throw new Error('Email não verificado. Verifique seu e-mail para acessar todas as funcionalidades.');
             } else {
                 // If email is verified, dispatch user data and proceed with login
                 dispatch(setCurrentUser(user));
