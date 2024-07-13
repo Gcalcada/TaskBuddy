@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     mainTitle: {
-        fontSize: 24,
+        fontSize: 23,
         fontWeight: 'bold',
         color: '#FFD700',
     },
