@@ -7,3 +7,6 @@ build
 *.apk
 *.aab
 *.ipa
+
+# Node
+node_modules
