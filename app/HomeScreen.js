@@ -1,4 +1,3 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -16,6 +15,7 @@ import { setMessage } from './reducer/messageReducer';
 const HomeScreen = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
+    const { addTask } = useAuth();
     const { logout } = useAuth();
     const { user } = useAuth();
     const [tasks, setTasks] = useState([]);
@@ -50,27 +50,31 @@ const HomeScreen = () => {
         setModalVisible(!isModalVisible);
     };
 
-    const handleAddTask = () => {
-        // Lógica para adicionar uma nova tarefa
-        console.log('Adicionar nova tarefa', { title, description, priority, startDate, endDate });
-        // Reset the form fields
-        setTitle('');
-        setDescription('');
-        setPriority('');
-        setStartDate(new Date());
-        setEndDate(new Date());
-        toggleModal(); // Fechar o modal após adicionar a tarefa
+    const handleAddTask = async () => {
+        try {
+            await addTask(title, description, priority, startDate, endDate);
+            console.log('Task added successfully');
+            setTitle('');
+            setDescription('');
+            setPriority('Low');
+            setStartDate(new Date());
+            setEndDate(new Date());
+            toggleModal();
+        } catch (error) {
+            console.error('Error adding task:', error);
+            dispatch(setMessage({ category: 'errorMessage', message: 'Erro ao adicionar tarefa. Por favor, tente novamente.' }));
+        }
     };
 
     const onStartDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || startDate;
-        setShowStartDatePicker(Platform.OS === 'ios');
+        setShowStartDatePicker(Platform.OS === 'android');
         setStartDate(currentDate);
     };
 
     const onEndDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || endDate;
-        setShowEndDatePicker(Platform.OS === 'ios');
+        setShowEndDatePicker(Platform.OS === 'android');
         setEndDate(currentDate);
     };
 
@@ -80,12 +84,9 @@ const HomeScreen = () => {
                 <Drawer
                     selectedIndex={selectedIndex}
                     onSelect={index => setSelectedIndex(index)} style={styles.menuButton2}>
-                    <DrawerItem title='Manage Your Data' titleStyle={styles.drawerItemText} />
-                    <DrawerItem title='Share us with your buddys' titleStyle={styles.drawerItemText} />
                     <DrawerItem title='Friends List' titleStyle={styles.drawerItemText} />
                     <DrawerItem title='Invite Buddys to your friends List' titleStyle={styles.drawerItemText} />
                     <DrawerItem title='Rate us on play store' titleStyle={styles.drawerItemText} />
-                    <DrawerItem title='Report a Bug' titleStyle={styles.drawerItemText} />
                     <DrawerItem title='Logout' onPress={handleLogout} titleStyle={styles.drawerItemText} />
                     <DrawerItem title='Delete all data' titleStyle={styles.drawerItemText} />
                     <DrawerItem title='Dev Informations' titleStyle={styles.drawerItemText} />
@@ -182,28 +183,7 @@ const HomeScreen = () => {
                             <Picker.Item label="High" value="High" />
                         </Picker>
                     </View>
-                    <TouchableOpacity onPress={() => setShowStartDatePicker(true)}>
-                        <Text style={styles.datePickerText}>Select Start Date: {startDate ? startDate.toLocaleDateString() : 'Select Date'}</Text>
-                    </TouchableOpacity>
-                    {showStartDatePicker && (
-                        <DateTimePicker
-                            value={startDate || new Date()}
-                            mode="date"
-                            display="default"
-                            onChange={onStartDateChange}
-                        />
-                    )}
-                    <TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
-                        <Text style={styles.datePickerText}>Select End Date: {endDate ? endDate.toLocaleDateString() : 'Select Date'}</Text>
-                    </TouchableOpacity>
-                    {showEndDatePicker && (
-                        <DateTimePicker
-                            value={endDate || new Date()}
-                            mode="date"
-                            display="default"
-                            onChange={onEndDateChange}
-                        />
-                    )}
+
                     <TouchableOpacity style={styles.saveButton} onPress={handleAddTask}>
                         <Text style={styles.saveButtonText}>Save Task</Text>
                     </TouchableOpacity>

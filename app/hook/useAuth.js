@@ -183,9 +183,33 @@ const useAuth = () => {
         }
     };
 
+    const addTask = async (title, description, priority) => {
+        try {
+            const userId = auth.currentUser.uid;
+            const tasksCollection = collection(db, 'tasks');
+
+            const newTask = {
+
+                userId,
+                title,
+                description,
+                priority,
+                createdAt: new Date().toISOString(),
+            };
+
+            await addDoc(tasksCollection, newTask);
+
+            console.log('New task added:', newTask);
+        } catch (error) {
+            console.error('Error adding new task:', error);
+            throw error;
+        }
+    };
+
 
     return {
         ...state,
+        addTask,
         loginWithGoogle,
         checkAuthStatus,
         loginWithEmailAndPassword,
