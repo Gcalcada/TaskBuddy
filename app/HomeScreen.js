@@ -4,7 +4,7 @@ import {
     Drawer, DrawerItem,
     IndexPath, Layout, Text
 } from '@ui-kitten/components';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -15,8 +15,7 @@ import { setMessage } from './reducer/messageReducer';
 const HomeScreen = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    const { addTask } = useAuth();
-    const { logout } = useAuth();
+    const { logout, addTask, fetchTasks } = useAuth();
     const { user } = useAuth();
     const [tasks, setTasks] = useState([]);
     const { fetchUserTasks } = useAuth();
@@ -29,6 +28,21 @@ const HomeScreen = () => {
     const [endDate, setEndDate] = useState(new Date());
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+
+    useEffect(() => {
+        const loadTasks = async () => {
+            try {
+                const userTasks = await fetchTasks();
+                setTasks(userTasks);
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+            }
+        };
+
+        loadTasks();
+    }, []);
+
+
 
     const handleLogout = async () => {
         try {
@@ -151,6 +165,16 @@ const HomeScreen = () => {
                             <Icon name='add' size={20} color='#000' style={styles.addIcon} />
                             <Text style={styles.addButtonText}>Add Task</Text>
                         </TouchableOpacity>
+                    </View>
+                    <View style={styles.taskList}>
+                        {tasks.map((task) => (
+                            <View key={task.id} style={styles.taskItem}>
+                                <Text style={styles.taskTitle}>Title: {task.title}</Text>
+                                <Text style={styles.taskDescription}>Description: {task.description}</Text>
+                                <Text style={styles.taskPriority}>Priority: {task.priority}</Text>
+
+                            </View>
+                        ))}
                     </View>
                 </>
             )}

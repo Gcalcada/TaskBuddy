@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from '@firebase/auth';
-import { addDoc, collection, getFirestore } from '@firebase/firestore';
+import { addDoc, collection, getDocs, getFirestore, query, where } from '@firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useReducer } from 'react';
 import { clearCurrentUser, setCurrentUser } from '../actions/authActions';
@@ -206,9 +206,29 @@ const useAuth = () => {
         }
     };
 
+    const fetchTasks = async () => {
+        try {
+            const userId = auth.currentUser.uid;
+            const tasksCollection = collection(db, 'tasks');
+            const q = query(tasksCollection, where('userId', '==', userId));
+
+            const querySnapshot = await getDocs(q);
+            const tasks = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            return tasks;
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+            throw error;
+        }
+    };
+
 
     return {
         ...state,
+        fetchTasks,
         addTask,
         loginWithGoogle,
         checkAuthStatus,
