@@ -1,10 +1,13 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import {
     Drawer, DrawerItem,
     IndexPath, Layout, Text
 } from '@ui-kitten/components';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch } from 'react-redux';
 import useAuth from './hook/useAuth';
@@ -14,8 +17,18 @@ const HomeScreen = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const { logout } = useAuth();
-
+    const { user } = useAuth();
+    const [tasks, setTasks] = useState([]);
+    const { fetchUserTasks } = useAuth();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Estado para controlar a abertura do Drawer
+    const [isModalVisible, setModalVisible] = useState(false); // Estado para controlar a visibilidade do modal
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [priority, setPriority] = useState('Low');
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
     const handleLogout = async () => {
         try {
@@ -31,6 +44,34 @@ const HomeScreen = () => {
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen); // Alternar o estado do Drawer
+    };
+
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    };
+
+    const handleAddTask = () => {
+        // Lógica para adicionar uma nova tarefa
+        console.log('Adicionar nova tarefa', { title, description, priority, startDate, endDate });
+        // Reset the form fields
+        setTitle('');
+        setDescription('');
+        setPriority('');
+        setStartDate(new Date());
+        setEndDate(new Date());
+        toggleModal(); // Fechar o modal após adicionar a tarefa
+    };
+
+    const onStartDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || startDate;
+        setShowStartDatePicker(Platform.OS === 'ios');
+        setStartDate(currentDate);
+    };
+
+    const onEndDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || endDate;
+        setShowEndDatePicker(Platform.OS === 'ios');
+        setEndDate(currentDate);
     };
 
     const renderDrawer = () => {
@@ -53,6 +94,7 @@ const HomeScreen = () => {
         }
         return null; // Não renderizar o Drawer se não estiver aberto
     };
+
     return (
         <Layout style={{ flex: 1 }}>
             <View style={styles.headerContainer}>
@@ -74,7 +116,6 @@ const HomeScreen = () => {
                                 style={styles.searchBar}
                             />
                         </View>
-
                     </View>
                     <View style={styles.headerContainer3}>
                         <View style={styles.titleContainer}>
@@ -104,8 +145,70 @@ const HomeScreen = () => {
                             </TouchableOpacity>
                         </ScrollView>
                     </View>
+                    <View style={styles.headerContainer5}>
+                        <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
+                            <Icon name='add' size={20} color='#000' style={styles.addIcon} />
+                            <Text style={styles.addButtonText}>Add Task</Text>
+                        </TouchableOpacity>
+                    </View>
                 </>
             )}
+            <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
+                <View style={styles.modalContent}>
+                    <Text style={styles.modalTitle}>Add New Task</Text>
+                    <TextInput
+                        placeholder="Task Title"
+                        placeholderTextColor="#FFFFFF"
+                        value={title}
+                        onChangeText={setTitle}
+                        style={styles.modalInput}
+                    />
+                    <TextInput
+                        placeholder="Task Description"
+                        placeholderTextColor="#FFFFFF"
+                        value={description}
+                        onChangeText={setDescription}
+                        style={styles.modalInput}
+                    />
+                    <Text style={styles.label}>Priority</Text>
+                    <View style={styles.modalPickerContainer}>
+                        <Picker
+                            selectedValue={priority}
+                            onValueChange={(itemValue) => setPriority(itemValue)}
+                            style={styles.modalPicker}
+                        >
+                            <Picker.Item label="Low" value="Low" />
+                            <Picker.Item label="Medium" value="Medium" />
+                            <Picker.Item label="High" value="High" />
+                        </Picker>
+                    </View>
+                    <TouchableOpacity onPress={() => setShowStartDatePicker(true)}>
+                        <Text style={styles.datePickerText}>Select Start Date: {startDate ? startDate.toLocaleDateString() : 'Select Date'}</Text>
+                    </TouchableOpacity>
+                    {showStartDatePicker && (
+                        <DateTimePicker
+                            value={startDate || new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={onStartDateChange}
+                        />
+                    )}
+                    <TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
+                        <Text style={styles.datePickerText}>Select End Date: {endDate ? endDate.toLocaleDateString() : 'Select Date'}</Text>
+                    </TouchableOpacity>
+                    {showEndDatePicker && (
+                        <DateTimePicker
+                            value={endDate || new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={onEndDateChange}
+                        />
+                    )}
+                    <TouchableOpacity style={styles.saveButton} onPress={handleAddTask}>
+                        <Text style={styles.saveButtonText}>Save Task</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
         </Layout>
     );
 };
@@ -153,7 +256,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         justifyContent: 'flex-start',
     },
-
+    headerContainer5: {
+        top: 40,
+    },
     menuButton2: {
         color: '#000000',
         width: '100%',
@@ -213,7 +318,77 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#000000',
     },
-
+    addButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 45,
+        borderRadius: 12,
+        paddingLeft: 20,
+        margin: 16,
+        top: 280,
+        backgroundColor: '#FFD700',
+        justifyContent: 'center',
+    },
+    addIcon: {
+        paddingRight: 30,
+    },
+    addButtonText: {
+        right: 25,
+        fontSize: 16,
+        color: '#000000',
+    },
+    modalContent: {
+        backgroundColor: '#222B44',
+        padding: 20,
+        borderRadius: 10,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: '#FFFFFF',
+    },
+    modalInput: {
+        color: '#FFFFFF',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10,
+    },
+    modalPickerContainer: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        marginBottom: 10,
+        color: '#FFFFFF',
+    },
+    modalPicker: {
+        width: '100%',
+        height: 50,
+        color: '#FFFFFF',
+    },
+    datePickerText: {
+        fontSize: 16,
+        color: '#FFFFFF',
+        marginBottom: 10,
+    },
+    saveButton: {
+        backgroundColor: '#FFD700',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    saveButtonText: {
+        fontSize: 16,
+        color: '#000',
+    },
+    label: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
 });
 
 export default HomeScreen;

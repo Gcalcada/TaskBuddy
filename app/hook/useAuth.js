@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from '@firebase/auth';
 import { addDoc, collection, getFirestore } from '@firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { clearCurrentUser, setCurrentUser } from '../actions/authActions';
 import { app } from '../firebaseInitialize';
 import authReducer from '../reducer/authReducer';
@@ -14,6 +14,21 @@ const useAuth = () => {
     const auth = getAuth(app);
     const db = getFirestore();
     const user = auth.user;
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+
+            if (user) {
+                dispatch(setCurrentUser(user));
+            } else {
+                dispatch(clearCurrentUser());
+            }
+        });
+
+        return () => unsubscribe();
+    }, [auth]);
+
+
     const checkAuthStatus = async () => {
         try {
             const currentUser = auth.currentUser;
