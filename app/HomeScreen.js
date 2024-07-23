@@ -19,8 +19,8 @@ const HomeScreen = () => {
     const { user } = useAuth();
     const [tasks, setTasks] = useState([]);
     const { fetchUserTasks } = useAuth();
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Estado para controlar a abertura do Drawer
-    const [isModalVisible, setModalVisible] = useState(false); // Estado para controlar a visibilidade do modal
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isModalVisible, setModalVisible] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState('Low');
@@ -168,11 +168,14 @@ const HomeScreen = () => {
                     </View>
                     <View style={styles.taskList}>
                         {tasks.map((task) => (
-                            <View key={task.id} style={styles.taskItem}>
-                                <Text style={styles.taskTitle}>Title: {task.title}</Text>
-                                <Text style={styles.taskDescription}>Description: {task.description}</Text>
-                                <Text style={styles.taskPriority}>Priority: {task.priority}</Text>
-
+                            <View key={task.id} style={styles.taskCard}>
+                                <View style={styles.taskInfo}>
+                                    <Text style={styles.taskTitle}>{task.title}</Text>
+                                    <Text style={styles.taskDescription}>{task.description}</Text>
+                                </View>
+                                <TouchableOpacity style={styles.priorityButton}>
+                                    <Text style={styles.priorityButtonText}>{task.priority}</Text>
+                                </TouchableOpacity>
                             </View>
                         ))}
                     </View>
@@ -278,14 +281,14 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         width: 40,
         height: 40,
-        borderRadius: 20, // Faz o View parecer um círculo
+        borderRadius: 20,
         backgroundColor: '#FFD700',
     },
     searchBar: {
         flex: 1,
         height: 45,
         borderRadius: 12,
-        paddingLeft: 40, // Adjusted to create space for the icon
+        paddingLeft: 40,
         margin: 16,
         backgroundColor: '#FFFFFF',
     },
@@ -392,6 +395,45 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 5,
+    },
+    taskCard: {
+        marginLeft: 20,
+        marginRight: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 10,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 3,
+    },
+    taskInfo: {
+        flex: 1,
+    },
+    taskTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#666',
+    },
+    taskDescription: {
+        fontSize: 14,
+        color: '#666',
+    },
+    priorityButton: {
+        backgroundColor: '#FFD700',
+        borderRadius: 5,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        marginLeft: 10,
+    },
+    priorityButtonText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#000',
     },
 });
 
