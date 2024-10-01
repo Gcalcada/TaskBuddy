@@ -1,12 +1,1 @@
-# Ignore Gradle project-specific cache directory
-.gradle
-/android/
-/ios/
-# Ignore Gradle build output directory
-build
-*.apk
-*.aab
-*.ipa
 
-# Node
-node_modules
