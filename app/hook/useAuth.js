@@ -40,14 +40,6 @@ const useAuth = () => {
         }
     };
 
-    const reloadUser = async () => {
-        try {
-            await auth.currentUser.reload();
-        } catch (error) {
-            console.error('Erro ao recarregar usuário:', error);
-            throw error;
-        }
-    };
     const loginWithGoogle = async () => {
         try {
             // ... (Google OAuth configuration - same as before)
@@ -167,7 +159,7 @@ const useAuth = () => {
 
             return userCredential.user;
         } catch (error) {
-            // Handle error
+
         }
     };
 
@@ -194,7 +186,7 @@ const useAuth = () => {
                 title,
                 description,
                 priority,
-                createdAt: new Date().toISOString(),
+
             };
 
             await addDoc(tasksCollection, newTask);

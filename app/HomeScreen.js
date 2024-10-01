@@ -1,3 +1,4 @@
+
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -5,7 +6,7 @@ import {
     IndexPath, Layout, Text
 } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch } from 'react-redux';
@@ -24,10 +25,10 @@ const HomeScreen = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState('Low');
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+
+
+
+    const [activeFilter, setActiveFilter] = useState('All');
 
     useEffect(() => {
         const loadTasks = async () => {
@@ -40,7 +41,7 @@ const HomeScreen = () => {
         };
 
         loadTasks();
-    }, []);
+    }, [isModalVisible]);
 
 
 
@@ -57,7 +58,7 @@ const HomeScreen = () => {
     const [selectedIndex, setSelectedIndex] = React.useState(new IndexPath(0));
 
     const toggleDrawer = () => {
-        setIsDrawerOpen(!isDrawerOpen); // Alternar o estado do Drawer
+        setIsDrawerOpen(!isDrawerOpen);
     };
 
     const toggleModal = () => {
@@ -66,13 +67,12 @@ const HomeScreen = () => {
 
     const handleAddTask = async () => {
         try {
-            await addTask(title, description, priority, startDate, endDate);
+            await addTask(title, description, priority);
             console.log('Task added successfully');
             setTitle('');
             setDescription('');
             setPriority('Low');
-            setStartDate(new Date());
-            setEndDate(new Date());
+
             toggleModal();
         } catch (error) {
             console.error('Error adding task:', error);
@@ -80,17 +80,7 @@ const HomeScreen = () => {
         }
     };
 
-    const onStartDateChange = (event, selectedDate) => {
-        const currentDate = selectedDate || startDate;
-        setShowStartDatePicker(Platform.OS === 'android');
-        setStartDate(currentDate);
-    };
 
-    const onEndDateChange = (event, selectedDate) => {
-        const currentDate = selectedDate || endDate;
-        setShowEndDatePicker(Platform.OS === 'android');
-        setEndDate(currentDate);
-    };
 
     const renderDrawer = () => {
         if (isDrawerOpen) {
@@ -109,7 +99,9 @@ const HomeScreen = () => {
         }
         return null; // Não renderizar o Drawer se não estiver aberto
     };
-
+    const filteredTasks = activeFilter === 'All'
+        ? tasks
+        : tasks.filter(task => task.priority === activeFilter || task.status === activeFilter);
     return (
         <Layout style={{ flex: 1 }}>
             <View style={styles.headerContainer}>
@@ -140,44 +132,47 @@ const HomeScreen = () => {
                     </View>
                     <View style={styles.headerContainer4}>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.buttonScrollContainer}>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity style={[styles.button, activeFilter === 'All' && styles.activeButton]} onPress={() => setActiveFilter('All')}>
                                 <Text style={styles.buttonText}>All</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity style={[styles.button, activeFilter === 'High' && styles.activeButton]} onPress={() => setActiveFilter('High')}>
                                 <Text style={styles.buttonText}>High</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity style={[styles.button, activeFilter === 'Medium' && styles.activeButton]} onPress={() => setActiveFilter('Medium')}>
                                 <Text style={styles.buttonText}>Medium</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity style={[styles.button, activeFilter === 'Low' && styles.activeButton]} onPress={() => setActiveFilter('Low')}>
                                 <Text style={styles.buttonText}>Low</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity style={[styles.button, activeFilter === 'In Progress' && styles.activeButton]} onPress={() => setActiveFilter('In Progress')}>
                                 <Text style={styles.buttonText}>In Progress</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity style={[styles.button, activeFilter === 'Done' && styles.activeButton]} onPress={() => setActiveFilter('Done')}>
                                 <Text style={styles.buttonText}>Done</Text>
                             </TouchableOpacity>
                         </ScrollView>
                     </View>
-                    <View style={styles.headerContainer5}>
-                        <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
-                            <Icon name='add' size={20} color='#000' style={styles.addIcon} />
-                            <Text style={styles.addButtonText}>Add Task</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.taskList}>
-                        {tasks.map((task) => (
-                            <View key={task.id} style={styles.taskCard}>
-                                <View style={styles.taskInfo}>
-                                    <Text style={styles.taskTitle}>{task.title}</Text>
-                                    <Text style={styles.taskDescription}>{task.description}</Text>
+                    <View style={{ flex: 1 }}>
+                        <ScrollView style={styles.taskList} contentContainerStyle={{ paddingBottom: 100 }}>
+                            {filteredTasks.map((task) => (
+                                <View key={task.id} style={styles.taskCard}>
+                                    <View style={styles.taskInfo}>
+                                        <Text style={styles.taskTitle}>{task.title}</Text>
+                                        <Text style={styles.taskDescription}>{task.description}</Text>
+                                    </View>
+                                    <TouchableOpacity style={styles.priorityButton}>
+                                        <Text style={styles.priorityButtonText}>{task.priority}</Text>
+                                    </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity style={styles.priorityButton}>
-                                    <Text style={styles.priorityButtonText}>{task.priority}</Text>
-                                </TouchableOpacity>
-                            </View>
-                        ))}
+                            ))}
+                        </ScrollView>
+
+                        <View style={styles.headerContainer5}>
+                            <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
+                                <Icon name='add' size={20} color='#000' style={styles.addIcon} />
+                                <Text style={styles.addButtonText}>Add Task</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </>
             )}
@@ -198,6 +193,8 @@ const HomeScreen = () => {
                         onChangeText={setDescription}
                         style={styles.modalInput}
                     />
+
+
                     <Text style={styles.label}>Priority</Text>
                     <View style={styles.modalPickerContainer}>
                         <Picker
@@ -216,18 +213,12 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
             </Modal>
-        </Layout>
+        </Layout >
     );
 };
 
 
-const DrawerHeader = () => (
-    <View style={styles.header}>
-        <Text category='h1'>John Kevin</Text>
-        <Text category='s1'>Email: John@kevin.com</Text>
-        <Text category='s1'>Play Type : Free</Text>
-    </View>
-);
+
 
 const styles = StyleSheet.create({
     container: {
@@ -260,11 +251,12 @@ const styles = StyleSheet.create({
     headerContainer4: {
 
         top: 25,
+        marginBottom: 20,
         paddingHorizontal: 20,
         justifyContent: 'flex-start',
     },
     headerContainer5: {
-        top: 40,
+
     },
     menuButton2: {
         color: '#000000',
@@ -329,12 +321,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         height: 45,
-        borderRadius: 12,
+        borderRadius: 5,
         paddingLeft: 20,
-        margin: 16,
-        top: 280,
+        margin: 20,
         backgroundColor: '#FFD700',
         justifyContent: 'center',
+        width: '90%',
+        alignSelf: 'center',
     },
     addIcon: {
         paddingRight: 30,
@@ -397,15 +390,15 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     taskCard: {
+
         marginLeft: 20,
         marginRight: 20,
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#FFF',
         borderRadius: 10,
-        padding: 10,
-        marginBottom: 10,
+        padding: 15,
+        marginTop: 20,
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 5,
