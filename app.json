@@ -1,33 +1,10 @@
 {
   "name": "TaskBuddy",
   "slug": "taskbuddy",
-  "scheme": "taskbuddy",
   "runtimeVersion": "1.1.0",
-  "orientation": "portrait",
-  "jsEngine": "hermes",
-  "icon": "./assets/icon.png",
-  "userInterfaceStyle": "light",
-  "splash": {
-    "image": "./assets/splash.png",
-    "resizeMode": "contain",
-    "backgroundColor": "#ffffff"
-  },
   "assetBundlePatterns": [
     "**/*"
   ],
-  "android": {
-    "package": "com.gcalcada7.taskbuddy",
-    "googleServicesFile": "./google-services.json",
-    "adaptiveIcon": {
-      "foregroundImage": "./assets/adaptive-icon.png",
-      "backgroundColor": "#ffffff"
-    },
-    "permissions": [
-      "android.permission.READ_EXTERNAL_STORAGE",
-      "android.permission.WRITE_EXTERNAL_STORAGE",
-      "android.permission.ACCESS_MEDIA_LOCATION"
-    ]
-  },
   "web": {
     "favicon": "./assets/favicon.png"
   },
@@ -50,9 +27,7 @@
       "@react-native-firebase/app",
       {
         "android": {
-          "googleServicesFile": "./android/google-services.json",
-          "versionCode": 18,
-          "package": "com.gcalcada7.taskbuddy"
+          "googleServicesFile": "./android/google-services.json"
         }
       }
     ],
