@@ -71,21 +71,5 @@
     "router": {
       "origin": false
     }
-  },
-  "owner": "gcalcadastudios",
-  "updates": {
-    "url": "https://u.expo.dev/5bc56f5a-2074-4d40-a6ad-bff9866b160c"
-  },
-  "sdkVersion": "51.0.0",
-  "expo": {
-    "android": {
-      "versionCode": 19,
-      "package": "com.gcalcada7.taskbuddy"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "505fab2b-99e6-42d9-9606-a1c70fdb20e8"
-      }
-    }
   }
 }
