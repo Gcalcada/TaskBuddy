@@ -16,7 +16,6 @@
     "**/*"
   ],
   "android": {
-    "versionCode": 18,
     "package": "com.gcalcada7.taskbuddy",
     "googleServicesFile": "./google-services.json",
     "adaptiveIcon": {
