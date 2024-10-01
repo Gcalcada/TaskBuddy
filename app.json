@@ -64,17 +64,10 @@
     ],
     "expo-asset"
   ],
-  "owner": "gcalcada7",
-  "sdkVersion": "51.0.0",
-  "expo": {
-    "android": {
-      "versionCode": 19,
-      "package": "com.gcalcada7.taskbuddy"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "505fab2b-99e6-42d9-9606-a1c70fdb20e8"
-      }
+  "extra": {
+    "eas": {
+      "projectId": "d229766e-c3d6-459b-ae87-658b0015536a"
     }
-  }
+  },
+  "owner": "gcalcada7"
 }
