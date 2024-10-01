@@ -64,14 +64,6 @@
     ],
     "expo-asset"
   ],
-  "extra": {
-    "eas": {
-      "projectId": "5bc56f5a-2074-4d40-a6ad-bff9866b160c"
-    },
-    "router": {
-      "origin": false
-    }
-  },
   "owner": "gcalcadastudios",
   "sdkVersion": "51.0.0",
   "expo": {
